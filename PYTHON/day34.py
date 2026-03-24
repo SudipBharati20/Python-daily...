@@ -1,7 +1,10 @@
 import speech_recognition as sr
 import pyttsx3
+import datetime
+import webbrowser
+import os
 
-# Initialize recognizer and speaker
+# Setup
 recognizer = sr.Recognizer()
 engine = pyttsx3.init()
 
@@ -21,32 +24,68 @@ def listen():
         print("You said:", command)
         return command.lower()
     except:
-        speak("Sorry, I didn't understand.")
         return ""
 
-def run_voice_bot():
-    speak("Hello! I am your voice assistant.")
-    
+def run_bot():
+    speak("Hello! I am your voice assistant. How can I help you?")
+
     while True:
         command = listen()
 
-        if "hello" in command:
-            speak("Hi there!")
+        if command == "":
+            speak("Please say that again.")
+            continue
 
-        elif "your name" in command:
-            speak("I am your Python voice bot.")
+        # 🔹 Greetings
+        if "hello" in command or "hi" in command:
+            speak("Hello! How are you?")
 
+        elif "how are you" in command:
+            speak("I am fine, thank you!")
+
+        # 🔹 Time & Date
         elif "time" in command:
-            from datetime import datetime
-            now = datetime.now().strftime("%H:%M:%S")
-            speak(f"The time is {now}")
+            time = datetime.datetime.now().strftime("%H:%M")
+            speak(f"The time is {time}")
 
+        elif "date" in command:
+            date = datetime.datetime.now().strftime("%B %d, %Y")
+            speak(f"Today is {date}")
+
+        # 🔹 Open websites
+        elif "open youtube" in command:
+            speak("Opening YouTube")
+            webbrowser.open("https://youtube.com")
+
+        elif "open google" in command:
+            speak("Opening Google")
+            webbrowser.open("https://google.com")
+
+        # 🔹 Search Google
+        elif "search" in command:
+            speak("What should I search?")
+            query = listen()
+            if query:
+                speak(f"Searching for {query}")
+                webbrowser.open(f"https://www.google.com/search?q={query}")
+
+        # 🔹 Open apps (Windows)
+        elif "open notepad" in command:
+            speak("Opening Notepad")
+            os.system("notepad")
+
+        elif "open calculator" in command:
+            speak("Opening Calculator")
+            os.system("calc")
+
+        # 🔹 Exit
         elif "exit" in command or "stop" in command:
             speak("Goodbye!")
             break
 
+        # 🔹 Default response
         else:
-            speak("Try another command.")
+            speak("I don't know that yet, but I'm learning!")
 
-# Run the bot
-run_voice_bot()
+# Run
+run_bot()
